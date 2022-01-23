@@ -37,6 +37,7 @@ In addition, it offers the possibility of currency exchange for a specified amou
 
 
 ### GET /api/currency/exchange
+#### Body
 ```
 {
     "currency_from": "string",
