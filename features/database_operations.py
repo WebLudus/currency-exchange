@@ -70,7 +70,7 @@ class DatabaseReadonlyUser(DatabaseUser):
         """
         con = self.connect_to_db()
         cur = con.cursor()
-        to_execute = f"""
+        to_execute = """
         SELECT currency, code, bid, ask, date
         FROM currency_rate
         """
@@ -131,7 +131,7 @@ class DatabaseSyncUser(DatabaseUser):
         """
         con = self.__connect_to_db()
         cur = con.cursor()
-        cur.execute(f"""SELECT date FROM currency_rate ORDER BY date DESC;""")
+        cur.execute("SELECT date FROM currency_rate ORDER BY date DESC;")
         content_table = cur.fetchall()[0][0]
         con.commit()
         cur.close()
@@ -146,7 +146,7 @@ class DatabaseSyncUser(DatabaseUser):
         """
         con = self.__connect_to_db()
         cur = con.cursor()
-        to_execute = f""" INSERT INTO currency_rate (currency, code, bid, ask, date) VALUES (%s,%s,%s,%s,%s)"""
+        to_execute = "INSERT INTO currency_rate (currency, code, bid, ask, date) VALUES (%s,%s,%s,%s,%s)"
         cur.execute(to_execute, values)
         con.commit()
         cur.close()
@@ -165,9 +165,7 @@ class DatabaseSyncUser(DatabaseUser):
                                    'Check the provided configuration data and try again.') from e
         default_con.set_isolation_level(extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         cur = default_con.cursor()
-        cur.execute(sql.SQL("CREATE DATABASE {} ENCODING = 'UTF8'").format(
-            sql.Identifier('currency'))
-        )
+        cur.execute(sql.SQL("CREATE DATABASE {} ENCODING = 'UTF8'").format(sql.Identifier('currency')))
         cur.close()
         default_con.close()
 
@@ -179,12 +177,12 @@ class DatabaseSyncUser(DatabaseUser):
         con = self.__connect_to_db()
         cur = con.cursor()
         try:
-            cur.execute(f'CREATE TABLE currency_rate (currency TEXT, code TEXT, bid TEXT, ask TEXT, date date);')
+            cur.execute("CREATE TABLE currency_rate (currency TEXT, code TEXT, bid TEXT, ask TEXT, date date);")
             con.commit()
             cur.close()
             con.close()
         except Exception as error:
-            print(f'A problem occurred while creating the table: {error}')
+            print(f"A problem occurred while creating the table: {error}")
             cur.close()
             con.close()
 
